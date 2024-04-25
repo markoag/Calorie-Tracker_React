@@ -1,13 +1,8 @@
-import { useState, ChangeEvent, FormEvent, Dispatch, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Activity } from "../types";
 import { categories } from "../data/categories";
-import { ActivityAction, ActivityState } from "../reducers/activity-reducer";
-
-type FormProps = {
-  readonly dispatch: Dispatch<ActivityAction>,
-  readonly state: ActivityState
-};
+import { useActivity } from "../hooks/useActivity";
 
 // Initial state for the form
 const initialActivity: Activity = {
@@ -17,7 +12,10 @@ const initialActivity: Activity = {
   calories: 0,
 };
 
-export default function Form({ dispatch, state }: FormProps) {
+export default function Form() {
+
+  const { state, dispatch } = useActivity();
+
   const [activity, setActivity] = useState<Activity>(initialActivity);
 
   // Set the activity to edit

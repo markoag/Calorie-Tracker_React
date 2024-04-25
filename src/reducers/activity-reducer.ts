@@ -1,4 +1,3 @@
-import { act } from "react-dom/test-utils";
 import { Activity } from "../types";
 
 export type ActivityAction =
@@ -54,6 +53,7 @@ export const activityReducer = (
         activities: state.activities.filter(
           (activity) => activity.id !== action.payload.id
         ),
+        activityId: "",
       };
     case "restart-app":
       return {

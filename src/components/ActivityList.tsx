@@ -1,23 +1,8 @@
-import { useMemo, Dispatch } from "react";
-import { categories } from "../data/categories";
-import { Activity } from "../types";
 import { PencilSquareIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { ActivityAction } from "../reducers/activity-reducer";
+import { useActivity } from "../hooks/useActivity";
 
-type ActivityListProps = {
-  activities: Activity[];
-  dispatch: Dispatch<ActivityAction>;
-};
-
-export default function ActivityList({ activities, dispatch }: ActivityListProps) {
-  // Devolver el nombre de la categoría
-  const categoryName = useMemo(
-    () => (category: Activity["category"]) =>
-      categories.map((cat) => (cat.id === category ? cat.name : "")),
-    [activities]
-  );
-
-  const isEmpty = useMemo(() => activities.length === 0, [activities])
+export default function ActivityList() {
+  const { state, dispatch, categoryName, isEmpty } = useActivity();
 
   return (
     <>
@@ -25,8 +10,12 @@ export default function ActivityList({ activities, dispatch }: ActivityListProps
         Comida y Actividades
       </h2>
 
-      { isEmpty ? <p className="text-center text-lg text-slate-600 py-3">No hay actividades</p> : null}
-      {activities.map((activity) => (
+      {isEmpty ? (
+        <p className="text-center text-lg text-slate-600 py-3">
+          No hay actividades
+        </p>
+      ) : null}
+      {state.activities.map((activity) => (
         <div
           key={activity.id}
           className="px-5 py-10 bg-white mt-5 flex justify-between shadow"
@@ -47,16 +36,26 @@ export default function ActivityList({ activities, dispatch }: ActivityListProps
           </div>
 
           <div className="flex gap-5 items-center">
-              <button onClick={() => dispatch({type: 'set-activityId', payload: {id: activity.id}})}>
-                <PencilSquareIcon
-                  className="h-6 w-6 text-slate-600"
-                />
-              </button>
-              <button onClick={() => dispatch({type: 'delete-activity', payload: {id: activity.id}})}>
-                <XCircleIcon
-                  className="h-6 w-6 text-red-500"
-                />
-              </button>
+            <button
+              onClick={() =>
+                dispatch({
+                  type: "set-activityId",
+                  payload: { id: activity.id },
+                })
+              }
+            >
+              <PencilSquareIcon className="h-6 w-6 text-slate-600" />
+            </button>
+            <button
+              onClick={() =>
+                dispatch({
+                  type: "delete-activity",
+                  payload: { id: activity.id },
+                })
+              }
+            >
+              <XCircleIcon className="h-6 w-6 text-red-500" />
+            </button>
           </div>
         </div>
       ))}
